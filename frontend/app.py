@@ -138,10 +138,9 @@ if run_button:
         try:
             # Initialize simulator
             simulator = DistillationSimulator()
-            config_manager = ConfigManager()
             
-            # Write config files (convert from UI to Fortran format)
-            config_manager.write_fortran_inputs(config)
+            # Set configuration from UI (this converts YAML->Fortran format automatically)
+            simulator.set_config(config)
             
             # Compile if needed
             if not simulator.executable.exists():

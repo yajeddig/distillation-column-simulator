@@ -6,10 +6,13 @@ and communication via file I/O.
 """
 
 import subprocess
+import shutil
 import os
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 import time
+
+from .config_manager import ConfigManager
 
 
 class DistillationSimulator:
@@ -20,6 +23,7 @@ class DistillationSimulator:
     - Compilation of Fortran code
     - Execution of simulations
     - Input/output file handling
+    - YAML config to Fortran format conversion
     """
     
     def __init__(self, backend_dir: Optional[str] = None):
@@ -39,6 +43,44 @@ class DistillationSimulator:
         self.executable = self.backend_dir / "distillation"
         self.config_dir = self.backend_dir.parent / "config"
         self.results_dir = self.backend_dir.parent / "results"
+        
+        # Initialize config manager
+        self.config_manager = ConfigManager(
+            config_dir=str(self.config_dir),
+            backend_dir=str(self.backend_dir)
+        )
+        
+    def _sync_config_files(self):
+        """Copy config files from config/ to backend/ for Fortran execution."""
+        config_files = ["OPERATOIRE.txt", "ALIMENTATION_PARAMETRE.txt"]
+        for filename in config_files:
+            src = self.config_dir / filename
+            dst = self.backend_dir / filename
+            if src.exists():
+                shutil.copy2(src, dst)
+    
+    def load_yaml_config(self, yaml_file: str = "simulation_config.yaml") -> Dict[str, Any]:
+        """
+        Load YAML config and convert to Fortran format.
+        
+        Args:
+            yaml_file: Name of YAML config file
+            
+        Returns:
+            Configuration dictionary
+        """
+        return self.config_manager.sync_yaml_to_fortran(yaml_file)
+    
+    def set_config(self, config: Dict[str, Any]):
+        """
+        Set simulation configuration from a dictionary.
+        
+        Converts the config to Fortran format and writes input files.
+        
+        Args:
+            config: Configuration dictionary (YAML format)
+        """
+        self.config_manager.write_fortran_inputs(config, to_backend=True)
         
     def compile(self, force: bool = False) -> bool:
         """
@@ -84,6 +126,9 @@ class DistillationSimulator:
             print("Executable not found. Compiling...")
             if not self.compile():
                 raise RuntimeError("Compilation failed")
+        
+        # Ensure config files are up to date
+        self._sync_config_files()
         
         # Prepare input (method choice: 1=MRSL01, 2=MRSL21)
         method_input = "2\n" if method == "MRSL21" else "1\n"
