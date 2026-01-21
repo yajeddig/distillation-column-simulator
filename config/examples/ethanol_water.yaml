@@ -1,0 +1,32 @@
+# Example: Ethanol-Water Binary Distillation
+# Classic chemical engineering separation
+
+column:
+  n_stages: 20
+  pressure_atm: 1.0
+
+feeds:
+  - stage: 10
+    flow_rate: 1.0
+    composition:
+      ethanol: 0.10
+      water: 0.90
+    state: liquid_at_bubble
+
+thermal:
+  reboiler_duty: 18000.0
+  condenser_duty: 12000.0
+
+liquid_sidestreams: []
+vapor_sidestreams: []
+
+solver:
+  method: MRSL21
+  tolerance: 1.0e-6
+  relaxation: 0.01
+  max_iterations: 5000
+
+output:
+  results_file: results/ethanol_water_results.csv
+  verbose: true
+  save_profiles: true

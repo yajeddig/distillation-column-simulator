@@ -1,0 +1,83 @@
+# Thermodynamic Properties for Pure Components
+# Data for NRTL model and enthalpy calculations
+
+components:
+  acetone:
+    index: 1
+    cas_number: "67-64-1"
+    molecular_weight: 58.08        # g/mol
+    
+    boiling_point: 329.44          # K at 1 atm
+    heat_of_vaporization: 29600    # J/mol at Tb
+    
+    heat_capacity:
+      vapor: 80.5                  # J/(mol·K)
+      liquid: 134.0                # J/(mol·K)
+    
+    antoine_coefficients:
+      A: 69.006
+      B: -5599.6
+      C: -7.0985
+      D: 6.2237e-6
+      E: 2.0
+      # log10(Psat[mmHg]) = A + B/T + C*log10(T) + D*T + E*T^2
+
+  benzene:
+    index: 2
+    cas_number: "71-43-2"
+    molecular_weight: 78.11        # g/mol
+    
+    boiling_point: 353.24          # K at 1 atm
+    heat_of_vaporization: 30800    # J/mol at Tb
+    
+    heat_capacity:
+      vapor: 96.0                  # J/(mol·K)
+      liquid: 147.0                # J/(mol·K)
+    
+    antoine_coefficients:
+      A: 83.107
+      B: -6486.2
+      C: -9.2194
+      D: 6.9844e-6
+      E: 2.0
+
+  chloroform:
+    index: 3
+    cas_number: "67-66-3"
+    molecular_weight: 119.38       # g/mol
+    
+    boiling_point: 334.33          # K at 1 atm
+    heat_of_vaporization: 29500    # J/mol at Tb
+    
+    heat_capacity:
+      vapor: 68.9                  # J/(mol·K)
+      liquid: 117.0                # J/(mol·K)
+    
+    antoine_coefficients:
+      A: 146.43
+      B: -7792.3
+      C: -20.614
+      D: 0.024578
+      E: 1.0
+
+# NRTL Model Binary Interaction Parameters
+nrtl_parameters:
+  acetone-benzene:
+    tau_12: -193.340               # C12 / (R*T) where C12 in cal/mol
+    tau_21: 569.931
+    alpha_12: 0.3007               # Non-randomness parameter
+  
+  acetone-chloroform:
+    tau_12: -643.277
+    tau_21: 228.457
+    alpha_12: 0.3043
+  
+  benzene-chloroform:
+    tau_12: 0.0                    # Symmetric (no interaction)
+    tau_21: 0.0
+    alpha_12: 0.0
+
+# Notes:
+# - NRTL tau parameters stored as C_ij values (cal/mol)
+# - tau_ij = C_ij / (R*T) where R = 1.989 cal/(mol·K)
+# - Binary azeotrope: Acetone-Chloroform at 66/34 mol% and 337.5 K

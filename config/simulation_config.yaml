@@ -1,0 +1,38 @@
+# Distillation Column Simulation Configuration
+# This file replaces the original OPERATOIRE.txt format
+
+column:
+  n_stages: 30                    # Number of theoretical stages
+  pressure_atm: 1.0               # Operating pressure [atm]
+  
+feeds:
+  - stage: 14                     # Feed stage number
+    flow_rate: 1.0                # Molar flow rate [mol/s]
+    composition:                  # Mole fractions (must sum to 1.0)
+      acetone: 0.6
+      benzene: 0.3
+      chloroform: 0.1
+    state: liquid_at_bubble       # liquid_at_bubble, liquid_at_dew, vapor, liquid
+
+thermal:
+  reboiler_duty: 21000.0          # Heat supplied to reboiler [cal/s]
+  condenser_duty: 15000.0         # Heat removed at condenser [cal/s]
+
+liquid_sidestreams: []            # List of {stage: int, flow_rate: float}
+  # - stage: 15
+  #   flow_rate: 0.1
+
+vapor_sidestreams: []             # List of {stage: int, flow_rate: float}
+  # - stage: 25
+  #   flow_rate: 0.05
+
+solver:
+  method: MRSL21                  # MRSL01 (full matrix) or MRSL21 (block tridiagonal)
+  tolerance: 1.0e-6               # Convergence tolerance
+  relaxation: 0.01                # Relaxation factor for Newton-Raphson
+  max_iterations: 5000            # Maximum number of iterations
+
+output:
+  results_file: results/simulation_results.csv
+  verbose: true
+  save_profiles: true
