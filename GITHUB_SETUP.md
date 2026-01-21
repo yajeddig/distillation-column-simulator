@@ -65,7 +65,8 @@ Create a custom image or use the default
 #### **Required Setup**
 Before deploying, ensure:
 - Backend is compiled on the server (add setup script)
-- Dependencies are in `requirements.txt`
+- Dependencies managed via `pyproject.toml` and `uv`
+- Streamlit Cloud: may need to create `requirements.txt` from `uv pip freeze`
 - Configuration files are accessible
 
 ### 5. Add GitHub Actions (Optional)
@@ -121,14 +122,18 @@ Once deployed, update:
 git clone https://github.com/YOUR_USERNAME/distillation-column-simulator.git
 cd distillation-column-simulator
 
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install Python dependencies
+uv sync
+
 # Build backend
-cd backend && make
+cd backend && make && cd ..
 
 # Run simulation (CLI)
-./distillation
+cd backend && ./distillation
 
 # Run web interface
-cd ../frontend
-pip install -r requirements.txt
-streamlit run app.py
+uv run streamlit run frontend/app.py
 ```

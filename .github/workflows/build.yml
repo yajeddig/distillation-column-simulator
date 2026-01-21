@@ -40,13 +40,15 @@ jobs:
       with:
         python-version: '3.10'
     
+    - name: Install uv
+      run: curl -LsSf https://astral.sh/uv/install.sh | sh
+    
     - name: Install dependencies
       run: |
-        cd frontend
-        pip install -r requirements.txt
+        uv sync
     
     - name: Check Python syntax
       run: |
-        python -m py_compile frontend/app.py
-        python -m py_compile frontend/components/*.py
-        python -m py_compile python/distillation_wrapper/*.py
+        uv run python -m py_compile frontend/app.py
+        uv run python -m py_compile frontend/components/*.py
+        uv run python -m py_compile python/distillation_wrapper/*.py

@@ -41,21 +41,29 @@
 # System requirements
 - gfortran (GCC Fortran compiler)
 - Python 3.8+
+- uv (Python package manager)
 - Make
 
 # Check installations
 gfortran --version
 python3 --version
+uv --version
 ```
+
+> 📦 **Using uv**: This project uses [uv](https://github.com/astral-sh/uv) for fast, reliable Python dependency management.
+> Install with: `curl -LsSf https://astral.sh/uv/install.sh | sh` (see [docs/UV_GUIDE.md](docs/UV_GUIDE.md) for details)
 
 ### Installation
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/distillation-simulator.git
-cd distillation-simulator
+git clone https://github.com/yourusername/distillation-column-simulator.git
+cd distillation-column-simulator
 
-# Install Python dependencies
+# Install Python dependencies with uv (recommended)
+uv sync
+
+# Or use pip (alternative)
 pip install -r frontend/requirements.txt
 
 # Compile Fortran backend
@@ -67,6 +75,11 @@ cd ..
 ### Run Web Interface
 
 ```bash
+# With uv (recommended)
+uv run streamlit run frontend/app.py
+
+# Or activate venv first
+source .venv/bin/activate  # Linux/macOS
 streamlit run frontend/app.py
 ```
 
