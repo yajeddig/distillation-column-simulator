@@ -1,0 +1,28 @@
+30          Nombre d'étages théoriques
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+1           NOMBRE D'ALIMENTATION DANS LA COLONNE
+Donner les étages correspondants aux entrées (SUR LA MËME LIGNE ESPACÉ PAR DES TABULATIONS)
+14
+DONNER LES DÉBIT D'ALIMENTATIONS CORRESPONDANTS SUR UNE MËME LIGNE ESPACÉ PAR DES TABULATIONS [MOL/S]
+1
+DONNER LES COMPOSITIONS DE CES ALIMENTATIONS EN LIGNE, ET CHAQUE ALIMENTATION UNE LIGNE
+0.6 0.3 0.1
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+Puissances
+21000.       Chaleur au bouilleur [cal/s]
+15000.       Chaleur au condenseur[cal/s]
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+1.           Pression de fonctionnement de la colonne [ATM]
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+0 Nombre de soutirage liquide
+LISTE DES ETAGES DE SOUTIRAGE SUR LA MËME LIGNE (TABULATION ENTRE CHAQUE VALEUR)
+
+DEBIT DE SOUTIRAGE LIQUIDE [MOL/S] SUR LA MËME LIGNE (TABULATION ENTRE CHAQUE VALEUR)
+
+———————————————————————————————————————————————————————————————————————————————————————————————————————
+0 Nombre de soutirage vapeur
+LISTE DES ETAGES DE SOUTIRAGE VAPEUR SUR LA MËME LIGNE (TABULATION ENTRE CHAQUE VALEUR)
+
+DONNER DEBIT DE SOUTIRAGE VAPEUR [MOL/S] SUR LA MËME LIGNE (TABULATION ENTRE CHAQUE VALEUR)
+
+———————————————————————————————————————————————————————————————————————————————————————————————————————
