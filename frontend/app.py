@@ -19,6 +19,7 @@ from distillation_wrapper import DistillationSimulator, ConfigManager, ResultsPr
 from components.sidebar import render_sidebar
 from components.plots import render_plots
 from components.results import render_results_table
+from components.thermodynamics import render_components_config, components_to_fortran_format
 
 # Page configuration
 st.set_page_config(
@@ -40,6 +41,8 @@ if 'simulation_results' not in st.session_state:
     st.session_state.simulation_results = None
 if 'simulation_metrics' not in st.session_state:
     st.session_state.simulation_metrics = None
+if 'thermo_config' not in st.session_state:
+    st.session_state.thermo_config = None
 
 # Sidebar configuration
 with st.sidebar:
@@ -60,7 +63,7 @@ with st.sidebar:
     run_button = st.button("▶️ Run Simulation", type="primary", use_container_width=True)
 
 # Main content area
-tab1, tab2, tab3, tab4 = st.tabs(["📊 Results", "📈 Profiles", "📋 Data Table", "ℹ️ About"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Results", "📈 Profiles", "🧪 Thermodynamics", "📋 Data Table", "ℹ️ About"])
 
 with tab1:
     if st.session_state.simulation_metrics:
@@ -95,12 +98,40 @@ with tab2:
         st.info("No simulation data available. Run a simulation first.")
 
 with tab3:
+    st.subheader("🧪 Thermodynamic Parameters")
+    st.markdown("""
+    Configure pure component properties and NRTL binary interaction parameters.
+    Changes here will be used in the next simulation run.
+    """)
+    
+    # Render thermodynamic configuration
+    st.session_state.thermo_config = render_components_config()
+    
+    # Save button
+    if st.button("💾 Save Thermodynamic Parameters", type="secondary"):
+        try:
+            # Write to ALIMENTATION_PARAMETRE.txt
+            content = components_to_fortran_format(st.session_state.thermo_config)
+            
+            # Write to both config and backend directories
+            config_path = Path(__file__).parent.parent / "config" / "ALIMENTATION_PARAMETRE.txt"
+            backend_path = Path(__file__).parent.parent / "backend" / "ALIMENTATION_PARAMETRE.txt"
+            
+            for path in [config_path, backend_path]:
+                with open(path, 'w') as f:
+                    f.write(content)
+            
+            st.success("✅ Thermodynamic parameters saved!")
+        except Exception as e:
+            st.error(f"❌ Error saving parameters: {e}")
+
+with tab4:
     if st.session_state.simulation_results:
         render_results_table(st.session_state.simulation_results)
     else:
         st.info("No simulation data available. Run a simulation first.")
 
-with tab4:
+with tab5:
     st.markdown("""
     ## About This Simulator
     
