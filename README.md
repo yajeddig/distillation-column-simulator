@@ -218,8 +218,8 @@ cd tests/fortran && ./run_validation.sh
 
 | Solver  | Method              | Avg. Time | Iterations | Memory  |
 |---------|---------------------|-----------|------------|---------|
-| MRSL21  | Block Tridiagonal   | ~50s      | ~1700      | Low     |
-| MRSL01  | Full Matrix         | ~120s     | ~1700      | Higher  |
+| MRSL21  | Block Tridiagonal   | ~20s      | ~1700      | Low     |
+| MRSL01  | Full Matrix         | ~26s      | ~1700      | Higher  |
 
 *Benchmark: 30 stages, acetone-benzene-chloroform, convergence 10⁻⁶*
 
@@ -230,7 +230,7 @@ cd tests/fortran && ./run_validation.sh
 **Original Project (2018)**
 - **Institution**: ENSGTI Pau, France
 - **Course**: Modélisation des opérations unitaires II
-- **Instructor**: Frédéric MARIAS
+- **Instructor**: Pr. Frédéric MARIAS
 - **Student**: Younes AJEDDIG
 
 **Modernization (2025)**
@@ -270,18 +270,11 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) file for
 ## 📧 Contact
 
 **Younes AJEDDIG**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
+- GitHub: [@yajeddig](https://github.com/yajeddig)
+- LinkedIn: [Younes AJEDDIG](https://www.linkedin.com/in/younes-ajeddig/)
+- Email: younes.ajeddig@gmail.com
+---
 
 ---
 
-## 🔗 Links
-
-- [Documentation](https://yourusername.github.io/distillation-simulator)
-- [Issue Tracker](https://github.com/yourusername/distillation-simulator/issues)
-- [Changelog](CHANGELOG.md)
-
----
-
-*Made with ❤️ for Chemical Engineering*
+*Made with ❤️ for Process & Chemical Engineering*
