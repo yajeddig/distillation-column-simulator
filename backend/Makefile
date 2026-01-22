@@ -1,7 +1,26 @@
 # Compiler and flags
 FC = gfortran
-FFLAGS = -O2 -Wall -Wextra -fcheck=all -g
-LDFLAGS = 
+
+# Build mode: debug, release, or parallel
+# Use: make BUILD=release    for optimized build
+# Use: make BUILD=parallel   for OpenMP parallel build
+BUILD ?= debug
+
+ifeq ($(BUILD),parallel)
+    # Parallel: OpenMP + optimizations
+    FFLAGS = -O3 -march=native -mtune=native -funroll-loops -ffast-math \
+             -flto -fno-protect-parens -fstack-arrays -fopenmp
+    LDFLAGS = -flto -fopenmp
+else ifeq ($(BUILD),release)
+    # Release: Maximum optimization (single-threaded)
+    FFLAGS = -O3 -march=native -mtune=native -funroll-loops -ffast-math \
+             -flto -fno-protect-parens -fstack-arrays
+    LDFLAGS = -flto
+else
+    # Debug: Safety checks enabled
+    FFLAGS = -O0 -Wall -Wextra -fcheck=all -g -fbacktrace
+    LDFLAGS = 
+endif
 
 # Directories
 SRC_DIR = src

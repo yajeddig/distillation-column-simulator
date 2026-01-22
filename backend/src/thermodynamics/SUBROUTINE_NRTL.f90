@@ -1,73 +1,57 @@
-SUBROUTINE NRTL(gamm,X,TEMP)
+SUBROUTINE NRTL(gamm, X, TEMP)
   USE MODULE_DIMENSION
   USE MODULE_INITIALISATION
   USE MODULE_OPERATOIRE
   USE MODULE_THERMODYNAMIC
   IMPLICIT NONE
 
-    integer :: i, j, k, l
-    DOUBLE PRECISION,DIMENSION(NC) :: gamm
-    DOUBLE PRECISION,DIMENSION(NC) :: X
-    DOUBLE PRECISION,DIMENSION(1:NC,1:NC) :: TAU, G
-    DOUBLE PRECISION :: A, B, CC, D, E, H, TEMP
+  DOUBLE PRECISION, INTENT(OUT), DIMENSION(NC) :: gamm
+  DOUBLE PRECISION, INTENT(IN), DIMENSION(NC) :: X
+  DOUBLE PRECISION, INTENT(IN) :: TEMP
+  
+  ! Local variables - automatic arrays on stack (faster than allocatable)
+  DOUBLE PRECISION, DIMENSION(NC, NC) :: TAU, G
+  DOUBLE PRECISION, DIMENSION(NC) :: sum_GX, sum_tauGX  ! Pre-computed sums
+  DOUBLE PRECISION :: RT_inv, A, B, H, CC_sum, D_sum, term
+  INTEGER :: i, j, k, l
 
+  ! Pre-compute 1/(R*T) - avoid repeated division
+  RT_inv = 1.D0 / (TEMP * 1.989D0)
 
+  ! Compute TAU and G matrices
+  DO j = 1, NC
+    DO i = 1, NC
+      TAU(i, j) = C(i, j) * RT_inv
+      G(i, j) = EXP(-ALPHA(i, j) * TAU(i, j))
+    END DO
+  END DO
 
+  ! Pre-compute common sums: sum_j(G_lj * X_l) and sum_j(tau_lj * G_lj * X_l)
+  DO j = 1, NC
+    sum_GX(j) = 0.D0
+    sum_tauGX(j) = 0.D0
+    DO l = 1, NC
+      term = G(l, j) * X(l)
+      sum_GX(j) = sum_GX(j) + term
+      sum_tauGX(j) = sum_tauGX(j) + TAU(l, j) * term
+    END DO
+  END DO
 
+  ! Compute activity coefficients
+  DO k = 1, NC
+    ! First term: sum(tau_lk * G_lk * X_l) / sum(G_lk * X_l)
+    A = sum_tauGX(k)
+    B = sum_GX(k)
+    
+    ! Second term: sum over j
+    H = 0.D0
+    DO j = 1, NC
+      CC_sum = sum_GX(j)
+      D_sum = sum_tauGX(j)
+      H = H + (X(j) * G(k, j) / CC_sum) * (TAU(k, j) - D_sum / CC_sum)
+    END DO
+    
+    gamm(k) = EXP(A / B + H)
+  END DO
 
-    !Initialisation
-    TAU=0
-    G=0
-    GAMM=0
-
-    ! calcul des tau et G
-
-    do i=1,nc
-      do j=1,nc
-        TAU(i,j) = C(i,j)/(TEMP*(1.989))
-      enddo
-    enddo
-
-    do i=1,nc
-      do j=1,nc
-        G(i,j) = exp(-ALPHA(i,j)*TAU(i,j))
-      enddo
-    enddo
-
-  ! calcul des termes du gamma
-
-  do k=1,nc
-    A=0
-    B=0
-    do l=1,nc
-      A=A + TAU(l,k)*G(l,k)*X(l)
-      B = B + G(l,k)*X(l)
-    enddo
-
-    H=0
-
-    do j=1,nc
-      CC=0
-      D=0
-      E=0
-      do l=1,nc
-        CC = CC + G(l,j)*X(l)
-        D = D + TAU(l,j)*G(l,j)*X(l)
-        E = E + G(l,j)*X(l)
-      enddo
-
-      H = H + ((X(j)*G(k,j))/CC)*(TAU(k,j)-(D/E))
-
-    enddo
-
-    gamm(k) = exp((A/B)+H)
-
-  enddo
-
-
-
-
-
-
-
-endsubroutine
+END SUBROUTINE
